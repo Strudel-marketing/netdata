@@ -1,32 +1,68 @@
-version: '3.7'
-
 services:
   netdata:
-    image: netdata/netdata:v1.47.4
-    container_name: netdata
+    image: 'netdata/netdata:v1.47.4'
+    container_name: netdata-xkg8wcwo0wsscsowo4cgo8ow-153910082811
     ports:
-      - "19999:19999"  # Expose Netdata UI on port 19999
+      - '19999:19999'
     restart: unless-stopped
     cap_add:
-      - SYS_PTRACE  # Required for monitoring
+      - SYS_PTRACE
     security_opt:
-      - apparmor=unconfined  # Allow more permissions for Netdata monitoring
+      - apparmor=unconfined
     volumes:
-      - ./netdata/config:/etc/netdata  # Custom configuration files from your repo
-      - netdata_lib:/var/lib/netdata  # Persistent storage for historical data
-      - netdata_cache:/var/cache/netdata  # Cache directory for faster performance
-      - /proc:/host/proc:ro  # System metrics
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /var/run/docker.sock:/var/run/docker.sock  # Docker socket for container metrics
+      - '/data/coolify/applications/xkg8wcwo0wsscsowo4cgo8ow/netdata/config:/etc/netdata'
+      - 'xkg8wcwo0wsscsowo4cgo8ow_netdata-lib:/var/lib/netdata'
+      - 'xkg8wcwo0wsscsowo4cgo8ow_netdata-cache:/var/cache/netdata'
+      - '/proc:/host/proc'
+      - '/sys:/host/sys'
+      - '/etc/os-release:/host/etc/os-release'
+      - '/var/run/docker.sock:/var/run/docker.sock'
     environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock  # Set Docker socket for container names
+      DOCKER_HOST: 'unix:///var/run/docker.sock'
+      COOLIFY_BRANCH: '"main"'
+      COOLIFY_RESOURCE_UUID: xkg8wcwo0wsscsowo4cgo8ow
+      COOLIFY_CONTAINER_NAME: netdata-xkg8wcwo0wsscsowo4cgo8ow-153910082811
+      COOLIFY_URL: 'https://netdata.strudel.marketing'
+      COOLIFY_FQDN: netdata.strudel.marketing
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:19999"]
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:19999'
       interval: 30s
       timeout: 10s
       retries: 5
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.397
+      - coolify.applicationId=10
+      - coolify.type=application
+      - coolify.name=netdata-xkg8wcwo0wsscsowo4cgo8ow-153910082811
+      - coolify.resourceName=strudel-marketingnetdatamain-ro0k4sg4cow840gco0wo044s
+      - coolify.projectName=netdata
+      - coolify.serviceName=strudel-marketingnetdatamain-ro0k4sg4cow840gco0wo044s
+      - coolify.environmentName=production
+      - coolify.pullRequestId=0
+      - traefik.enable=true
+      - traefik.http.routers.netdata.rule=Host(`netdata.strudel.marketing`)
+      - traefik.http.routers.netdata.entrypoints=websecure
+      - traefik.http.routers.netdata.tls=true
+      - traefik.http.routers.netdata.tls.certresolver=letsencrypt
+      - traefik.http.services.netdata.loadbalancer.server.port=19999
+    networks:
+      xkg8wcwo0wsscsowo4cgo8ow: null
 
 volumes:
-  netdata_lib:
-  netdata_cache:
+  xkg8wcwo0wsscsowo4cgo8ow_netdata-lib:
+    name: xkg8wcwo0wsscsowo4cgo8ow_netdata-lib
+  xkg8wcwo0wsscsowo4cgo8ow_netdata-cache:
+    name: xkg8wcwo0wsscsowo4cgo8ow_netdata-cache
+
+networks:
+  xkg8wcwo0wsscsowo4cgo8ow:
+    name: xkg8wcwo0wsscsowo4cgo8ow
+    external: true
+
+configs: {}
+secrets: {}
